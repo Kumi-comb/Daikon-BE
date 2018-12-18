@@ -1,12 +1,8 @@
 package controller
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
-	"fmt"
-	"time"
-
 	"github.com/Kumi-comb/Daikon-BE/app"
+	"github.com/Kumi-comb/Daikon-BE/libs"
 	"github.com/goadesign/goa"
 )
 
@@ -21,14 +17,10 @@ func NewLinkcodeController(service *goa.Service) *LinkcodeController {
 }
 
 // Linkcode runs the linkcode action.
-func (c *LinkcodeController) Linkcode(ctx *app.LinkcodeLinkcodeContext) error {
+func (c *LinkcodeController) Linkcode(ctx *app.LinkcodeContext) error {
 	// LinkcodeController_Linkcode: start_implement
 
-	// Put your logic here
-	b := sha256.Sum256([]byte(ctx.UniqueCode + time.Now().Format("20060102150405")))
-	s := hex.EncodeToString(b[:])[:4]
-	fmt.Printf(time.Now().Format("200601021510405"))
-
+	s := libs.GenerateLinkCode(ctx.UniqueCode)
 	return ctx.OK([]byte(s))
 	// LinkcodeController_Linkcode: end_implement
 }

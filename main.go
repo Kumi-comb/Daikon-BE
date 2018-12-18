@@ -23,6 +23,10 @@ func main() {
 	c := controller.NewLinkcodeController(service)
 	app.MountLinkcodeController(service, c)
 
+	// Mount "status" controller
+	c := controller.NewStatusController(service)
+	app.MountStatusController(service, c)
+
 	// Start service
 	if err := service.ListenAndServe(":8080"); err != nil {
 		service.LogError("startup", "err", err)

@@ -34,7 +34,7 @@ func initService(service *goa.Service) {
 // LinkcodeController is the controller interface for the Linkcode actions.
 type LinkcodeController interface {
 	goa.Muxer
-	Linkcode(*LinkcodeLinkcodeContext) error
+	Create(*CreateLinkcodeContext) error
 }
 
 // MountLinkcodeController "mounts" a Linkcode resource controller on the given service.
@@ -48,12 +48,39 @@ func MountLinkcodeController(service *goa.Service, ctrl LinkcodeController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewLinkcodeLinkcodeContext(ctx, req, service)
+		rctx, err := NewCreateLinkcodeContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
-		return ctrl.Linkcode(rctx)
+		return ctrl.Create(rctx)
 	}
-	service.Mux.Handle("GET", "/linkcode/:uniqueCode", ctrl.MuxHandler("linkcode", h, nil))
-	service.LogInfo("mount", "ctrl", "Linkcode", "action", "Linkcode", "route", "GET /linkcode/:uniqueCode")
+	service.Mux.Handle("GET", "/linkcode/:uniqueCode", ctrl.MuxHandler("create", h, nil))
+	service.LogInfo("mount", "ctrl", "Linkcode", "action", "Create", "route", "GET /linkcode/:uniqueCode")
+}
+
+// StatusController is the controller interface for the Status actions.
+type StatusController interface {
+	goa.Muxer
+	Get(*GetStatusContext) error
+}
+
+// MountStatusController "mounts" a Status resource controller on the given service.
+func MountStatusController(service *goa.Service, ctrl StatusController) {
+	initService(service)
+	var h goa.Handler
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewGetStatusContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Get(rctx)
+	}
+	service.Mux.Handle("GET", "/status/:uniqueCode", ctrl.MuxHandler("get", h, nil))
+	service.LogInfo("mount", "ctrl", "Status", "action", "Get", "route", "GET /status/:uniqueCode")
 }
