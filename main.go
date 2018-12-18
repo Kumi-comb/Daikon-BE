@@ -19,9 +19,9 @@ func main() {
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
 
-	// Mount "bottle" controller
-	c := controller.NewBottleController(service)
-	app.MountBottleController(service, c)
+	// Mount "linkcode" controller
+	c := controller.NewLinkcodeController(service)
+	app.MountLinkcodeController(service, c)
 
 	// Start service
 	if err := service.ListenAndServe(":8080"); err != nil {

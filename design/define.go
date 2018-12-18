@@ -4,9 +4,9 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = API("cellar", func() { // API defines the microservice endpoint and
-	Title("The virtual wine cellar")    // other global properties. There should be one
-	Description("A simple goa service") // and exactly one API definition appearing in
-	Scheme("http")                      // the design.
+var _ = API("Daikon-BE", func() { // API defines the microservice endpoint and
+	Title("Daikon backend system")                    // other global properties. There should be one
+	Description("API for train delay display widget") // and exactly one API definition appearing in
+	Scheme("http")                                    // the design.
 	Host("localhost:8080")
 })
