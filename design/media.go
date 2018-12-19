@@ -6,7 +6,7 @@ import (
 )
 
 // LineInformationMediaType is a one of support lines.
-var LineInformationMediaType = MediaType("application/json", func() {
+var LineInformationMediaType = MediaType("application/vnd.line.information", func() {
 	attributes := func() {
 		Attribute("ID")
 		Attribute("CorporationName")
@@ -17,7 +17,7 @@ var LineInformationMediaType = MediaType("application/json", func() {
 })
 
 // SettingsMediaType is a setting.
-var SettingsMediaType = MediaType("appliaction/json", func() {
+var SettingsMediaType = MediaType("appliaction/vnd.settings", func() {
 	attributes := func() {
 		Attribute("lines", ArrayOf(String))
 		Attribute("times", ArrayOf(HashOf(String, String)))
