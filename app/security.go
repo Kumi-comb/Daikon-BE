@@ -30,10 +30,10 @@ func UseJWTMiddleware(service *goa.Service, middleware goa.Middleware) {
 func NewJWTSecurity() *goa.JWTSecurity {
 	def := goa.JWTSecurity{
 		In:       goa.LocHeader,
-		Name:     "Authorizaion",
+		Name:     "Authorization",
 		TokenURL: "",
 		Scopes: map[string]string{
-			"api:access": "API Access",
+			"api:access": "API access",
 		},
 	}
 	return &def

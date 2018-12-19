@@ -57,6 +57,7 @@ func (c *JWTController) Signin(ctx *app.SigninJWTContext) error {
 
 	// Put your logic here
 	// Generate JWT
+
 	token := jwtgo.New(jwtgo.SigningMethodRS512)
 	expire := time.Now().Add(time.Hour * 2).Unix()
 	token.Claims = jwtgo.MapClaims{
@@ -68,7 +69,7 @@ func (c *JWTController) Signin(ctx *app.SigninJWTContext) error {
 		"nbf":                   2,                                // time before which the token is not yet valid (2 minutes ago)
 		"sub":                   "AccessToken",                    // the subject/principal is whom the token is about
 		"scopes":                "api:access",                     // token scope - not a standard claim
-		"xyz.uths.kumi-comb.id": 5,
+		"xyz.uths.kumi-comb.id": ctx.Payload.UserScreenName,
 	}
 	signedToken, err := token.SignedString(c.privateKey)
 	if err != nil {

@@ -131,8 +131,8 @@ func MountDevicesController(service *goa.Service, ctrl DevicesController) {
 		return ctrl.LinkDevice(rctx)
 	}
 	h = handleSecurity("jwt", h, "api:access")
-	service.Mux.Handle("POST", "/devices/link/:linkCode", ctrl.MuxHandler("linkDevice", h, nil))
-	service.LogInfo("mount", "ctrl", "Devices", "action", "LinkDevice", "route", "POST /devices/link/:linkCode", "security", "jwt")
+	service.Mux.Handle("GET", "/devices/link/:linkCode", ctrl.MuxHandler("linkDevice", h, nil))
+	service.LogInfo("mount", "ctrl", "Devices", "action", "LinkDevice", "route", "GET /devices/link/:linkCode", "security", "jwt")
 }
 
 // JWTController is the controller interface for the JWT actions.

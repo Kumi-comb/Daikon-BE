@@ -5,10 +5,10 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-// JWT Components
+// JWT ...
 var JWT = JWTSecurity("jwt", func() {
-	Header("Authorizaion")
-	Scope("api:access", "API Access")
+	Header("Authorization")
+	Scope("api:access", "API access")
 })
 
 var _ = Resource("jwt", func() {
@@ -51,13 +51,13 @@ var _ = Resource("accounts", func() {
 
 var _ = Resource("devices", func() {
 	BasePath("/devices")
+	Security(JWT, func() {
+		Scope("api:access")
+	})
 
 	Action("deviceList", func() {
 		Description("デバイス一覧を返す")
 		Routing(GET(""))
-		Security(JWT, func() {
-			Scope("api:access")
-		})
 
 		Response(OK, ArrayOf(String))
 	})
@@ -65,6 +65,7 @@ var _ = Resource("devices", func() {
 	Action("generateLinkCode", func() {
 		Description("ユニークコードを使用してリンクコードを生成する")
 		Routing(GET("/:uniqueCode"))
+		NoSecurity()
 
 		Params(func() {
 			Param("uniqueCode", String, "Device unique code")
@@ -75,10 +76,7 @@ var _ = Resource("devices", func() {
 
 	Action("linkDevice", func() {
 		Description("リンクコードを使用してユニークコードとアカウントを鎖付けする")
-		Routing(POST("/link/:linkCode"))
-		Security(JWT, func() {
-			Scope("api:access")
-		})
+		Routing(GET("/link/:linkCode"))
 
 		Params(func() {
 			Param("linkCode", String, "LinkCode")
@@ -91,10 +89,14 @@ var _ = Resource("devices", func() {
 
 var _ = Resource("status", func() {
 	BasePath("/status")
+	Security(JWT, func() {
+		Scope("api:access")
+	})
 
 	Action("get", func() {
 		Description("ユニークコードを基にデバイスが本来あるべき状態のデータを取得する")
 		Routing(GET("/:uniqueCode"))
+		NoSecurity()
 
 		Params(func() {
 			Param("uniqueCode", String, "Device unique code")
@@ -107,9 +109,6 @@ var _ = Resource("status", func() {
 	Action("settings", func() {
 		Description("デバイスの設定を定義する")
 		Routing(POST("/:uniqueCode/settings"))
-		Security(JWT, func() {
-			Scope("api:access")
-		})
 
 		Params(func() {
 			Param("uniqueCode", String, "Device unique code")
@@ -128,7 +127,6 @@ var _ = Resource("status", func() {
 
 var _ = Resource("resources", func() {
 	BasePath("/resources")
-
 	Security(JWT, func() {
 		Scope("api:access")
 	})

@@ -20,11 +20,28 @@ func NewDevicesController(service *goa.Service) *DevicesController {
 func (c *DevicesController) DeviceList(ctx *app.DeviceListDevicesContext) error {
 	// DevicesController_DeviceList: start_implement
 
-	// Put your logic here
-	deviceList := []string{
-		"a",
-	}
-	return ctx.OK(deviceList)
+	// fmt.Printf("aaa")
+
+	// // Put your logic here
+	// // Retrieve the token claims
+	// token := jwt.ContextJWT(ctx)
+	// if token == nil {
+	// 	return fmt.Errorf("JWT token is missing from context") // internal error
+	// }
+	// claims := token.Claims.(jwtgo.MapClaims)
+
+	// // Use the claims to authorize
+	// subject := claims["sub"].(string)
+
+	// if subject == "AccessToken" {
+	// 	// A real app would probably use an "Unauthorized" response here
+	// 	// return ctx.Unauthorized()
+	// }
+
+	// deviceList := []string{
+	// 	"a",
+	// }
+	return nil
 	// DevicesController_DeviceList: end_implement
 }
 

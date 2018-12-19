@@ -171,7 +171,7 @@ func LinkDeviceDevicesForbidden(t goatest.TInterface, ctx context.Context, servi
 	u := &url.URL{
 		Path: fmt.Sprintf("/devices/link/%v", linkCode),
 	}
-	req, err := http.NewRequest("POST", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
@@ -232,7 +232,7 @@ func LinkDeviceDevicesOK(t goatest.TInterface, ctx context.Context, service *goa
 	u := &url.URL{
 		Path: fmt.Sprintf("/devices/link/%v", linkCode),
 	}
-	req, err := http.NewRequest("POST", u.String(), nil)
+	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
