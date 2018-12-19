@@ -75,7 +75,7 @@ var _ = Resource("devices", func() {
 
 	Action("linkDevice", func() {
 		Description("リンクコードを使用してユニークコードとアカウントを鎖付けする")
-		Routing(PATCH("/:linkCode"))
+		Routing(POST("/link/:linkCode"))
 		Security(JWT, func() {
 			Scope("api:access")
 		})
