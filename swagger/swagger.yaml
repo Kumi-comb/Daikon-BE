@@ -1,0 +1,311 @@
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  CreateAccountAccountsPayload:
+    example:
+      password: Sunt voluptas.
+      screenName: Et a omnis laborum in molestiae.
+    properties:
+      password:
+        example: Sunt voluptas.
+        type: string
+      screenName:
+        example: Et a omnis laborum in molestiae.
+        type: string
+    title: CreateAccountAccountsPayload
+    type: object
+  Json:
+    description: Json media type (default view)
+    example:
+      lines:
+      - Sit et similique reprehenderit est.
+      - Sit et similique reprehenderit est.
+      times:
+      - Ut aut dolor placeat.: Distinctio sed non molestiae itaque.
+      - Ut aut dolor placeat.: Distinctio sed non molestiae itaque.
+    properties:
+      lines:
+        example:
+        - Sit et similique reprehenderit est.
+        - Sit et similique reprehenderit est.
+        items:
+          example: Sit et similique reprehenderit est.
+          type: string
+        type: array
+      times:
+        example:
+        - Ut aut dolor placeat.: Distinctio sed non molestiae itaque.
+        - Ut aut dolor placeat.: Distinctio sed non molestiae itaque.
+        items:
+          additionalProperties: true
+          example:
+            Ut aut dolor placeat.: Distinctio sed non molestiae itaque.
+          type: object
+        type: array
+    title: 'Mediatype identifier: appliaction/json; view=default'
+    type: object
+  SettingsStatusPayload:
+    example:
+      continueTimes: Repudiandae sunt.
+      lines: Labore culpa.
+      password: Aperiam cum.
+      userScreenName: Qui voluptas unde expedita qui.
+    properties:
+      continueTimes:
+        example: Repudiandae sunt.
+        type: string
+      lines:
+        example: Labore culpa.
+        type: string
+      password:
+        example: Aperiam cum.
+        type: string
+      userScreenName:
+        example: Qui voluptas unde expedita qui.
+        type: string
+    title: SettingsStatusPayload
+    type: object
+  SigninJwtPayload:
+    example:
+      password: Non ullam autem.
+      userScreenName: Amet veniam non.
+    properties:
+      password:
+        example: Non ullam autem.
+        type: string
+      userScreenName:
+        example: Amet veniam non.
+        type: string
+    title: SigninJwtPayload
+    type: object
+host: localhost:8080
+info:
+  description: API for train delay display widget
+  title: Daikon backend system
+  version: ""
+paths:
+  /accounts:
+    post:
+      description: アカウントの作成を行う
+      operationId: accounts#createAccount
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateAccountAccountsPayload'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+      schemes:
+      - http
+      summary: createAccount accounts
+      tags:
+      - accounts
+  /devices:
+    get:
+      description: |-
+        デバイス一覧を返す
+
+        Required security scopes:
+          * `api:access`
+      operationId: devices#deviceList
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - http
+      security:
+      - jwt:
+        - api:access
+      summary: deviceList devices
+      tags:
+      - devices
+  /devices/{linkCode}:
+    patch:
+      description: |-
+        リンクコードを使用してユニークコードとアカウントを鎖付けする
+
+        Required security scopes:
+          * `api:access`
+      operationId: devices#linkDevice
+      parameters:
+      - description: LinkCode
+        in: path
+        name: linkCode
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+      schemes:
+      - http
+      security:
+      - jwt:
+        - api:access
+      summary: linkDevice devices
+      tags:
+      - devices
+  /devices/{uniqueCode}:
+    get:
+      description: ユニークコードを使用してリンクコードを生成する
+      operationId: devices#generateLinkCode
+      parameters:
+      - description: Device unique code
+        in: path
+        name: uniqueCode
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - http
+      summary: generateLinkCode devices
+      tags:
+      - devices
+  /jwt/signin:
+    post:
+      description: ID/Passペアで認証を行う
+      operationId: jwt#signin
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/SigninJwtPayload'
+      responses:
+        "204":
+          description: No Content
+          headers:
+            Authorization:
+              description: Generated JWT
+              type: string
+        "403":
+          description: Forbidden
+      schemes:
+      - http
+      summary: signin jwt
+      tags:
+      - jwt
+  /resources/supports/lines:
+    get:
+      description: |-
+        対応している路線とその固有IDを返す
+
+        Required security scopes:
+          * `api:access`
+      operationId: resources#supportLine
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - http
+      security:
+      - jwt:
+        - api:access
+      summary: supportLine resources
+      tags:
+      - resources
+  /status/{uniqueCode}:
+    get:
+      description: ユニークコードを基にデバイスが本来あるべき状態のデータを取得する
+      operationId: status#get
+      parameters:
+      - description: Device unique code
+        in: path
+        name: uniqueCode
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      summary: get status
+      tags:
+      - status
+  /status/{uniqueCode}/settings:
+    post:
+      description: |-
+        デバイスの設定を定義する
+
+        Required security scopes:
+          * `api:access`
+      operationId: status#settings
+      parameters:
+      - description: Device unique code
+        in: path
+        name: uniqueCode
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/SettingsStatusPayload'
+      produces:
+      - appliaction/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Json'
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      security:
+      - jwt:
+        - api:access
+      summary: settings status
+      tags:
+      - status
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+responses:
+  BadRequest:
+    description: Bad Request
+  Forbidden:
+    description: Forbidden
+  NotFound:
+    description: Not Found
+  OK:
+    description: OK
+schemes:
+- http
+securityDefinitions:
+  jwt:
+    description: |2-
+
+
+      **Security Scopes**:
+        * `api:access`: API Access
+    in: header
+    name: Authorizaion
+    type: apiKey
+swagger: "2.0"
