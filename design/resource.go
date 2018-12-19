@@ -59,7 +59,7 @@ var _ = Resource("devices", func() {
 			Scope("api:access")
 		})
 
-		Response(OK)
+		Response(OK, ArrayOf(String))
 	})
 
 	Action("generateLinkCode", func() {
